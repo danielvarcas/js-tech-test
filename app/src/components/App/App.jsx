@@ -14,17 +14,23 @@ import SkyBetLogo from "../../images/skybet-logo.png";
 class App extends React.Component {
   constructor() {
     super();
-    this.w = new WebSocket("ws://localhost:8889");
     this.state = {
+      webSocket: new WebSocket("ws://localhost:8889"),
       liveEventsData: {},
+      marketsData: [],
       showPrimaryMarkets: false
     };
   }
 
   componentDidMount() {
-    const { showPrimaryMarkets } = this.state;
-    this.listenForMessages();
-    this.w.onopen = () => this.getLiveEvents(showPrimaryMarkets);
+    const { webSocket, showPrimaryMarkets } = this.state;
+
+    webSocket.onopen = () => {
+      // eslint-disable-next-line no-console
+      console.log("Connected WebSocket in App component");
+      this.listenForMessages();
+      this.getLiveEvents(showPrimaryMarkets);
+    };
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -36,15 +42,44 @@ class App extends React.Component {
   }
 
   getLiveEvents = (primaryMarkets = false) => {
-    this.w.send(JSON.stringify({ type: "getLiveEvents", primaryMarkets }));
+    const { webSocket } = this.state;
+    webSocket.send(JSON.stringify({ type: "getLiveEvents", primaryMarkets }));
   };
 
+  getMarket(marketId = 0) {
+    const { webSocket } = this.state;
+    webSocket.send(
+      JSON.stringify({
+        type: "getMarket",
+        id: marketId
+      })
+    );
+  }
+
+  updateMarketsData(newMarketData) {
+    const { marketsData } = this.state;
+
+    const newMarketDataIsDuplicate = marketsData.some(
+      marketData => marketData.marketId === newMarketData.marketId
+    );
+
+    if (!newMarketDataIsDuplicate) {
+      const combinedMarketData = [...marketsData, newMarketData];
+      this.setState({ marketsData: combinedMarketData });
+    }
+  }
+
   listenForMessages() {
-    this.w.addEventListener("message", m => {
+    const { webSocket } = this.state;
+
+    webSocket.addEventListener("message", m => {
       const message = JSON.parse(m.data);
       switch (message.type) {
         case "LIVE_EVENTS_DATA":
           this.setState({ liveEventsData: message.data });
+          break;
+        case "MARKET_DATA":
+          this.updateMarketsData(message.data);
           break;
         default:
           break;
@@ -53,7 +88,13 @@ class App extends React.Component {
   }
 
   render() {
-    const { liveEventsData, showPrimaryMarkets } = this.state;
+    const {
+      liveEventsData,
+      marketsData,
+      showPrimaryMarkets,
+      webSocket
+    } = this.state;
+
     const linkedEventTypes =
       liveEventsData.length > 1
         ? liveEventsData.map(event => {
@@ -119,6 +160,8 @@ class App extends React.Component {
                           event.linkedEventTypeId ===
                           eventType.linkedEventTypeId
                       )}
+                      marketsData={marketsData}
+                      webSocket={webSocket}
                     />
                   ) : null
                 )}
