@@ -1,7 +1,8 @@
 import React from "react";
 import "./App.css";
-import { Navbar } from "react-bootstrap";
-import SkyBetLogo from "./images/skybet-logo.png";
+import { Navbar, ListGroup } from "react-bootstrap";
+import EventDisplay from "../index";
+import SkyBetLogo from "../../images/skybet-logo.png";
 
 class App extends React.Component {
   constructor() {
@@ -44,12 +45,13 @@ class App extends React.Component {
             <img src={SkyBetLogo} alt="Sky Bet" />
           </Navbar.Brand>
         </Navbar>
-        <ul>
+        <h2>Live Events</h2>
+        <ListGroup as="ul">
           {liveEventsData.length > 0 &&
             liveEventsData.map(event => (
-              <li key={event.eventId}>{event.name}</li>
+              <EventDisplay key={event.eventId} name={event.name} />
             ))}
-        </ul>
+        </ListGroup>
       </div>
     );
   }
