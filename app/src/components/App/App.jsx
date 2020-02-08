@@ -137,7 +137,6 @@ class App extends React.Component {
           <Row>
             <Col>
               <h1>Live Games</h1>
-
               <Button
                 variant="primary"
                 onClick={() =>
@@ -148,7 +147,6 @@ class App extends React.Component {
                   ? "Hide Primary Markets"
                   : "Show Primary Markets"}
               </Button>
-
               {distinctLinkedEventTypes.length > 0 &&
                 distinctLinkedEventTypes.map(eventType =>
                   eventType.linkedEventTypeId ? (
@@ -167,21 +165,20 @@ class App extends React.Component {
                 )}
 
               {distinctLinkedEventTypes.length > 0 &&
-                distinctLinkedEventTypes.some(
-                  event => !event.linkedEventTypeId
-                ) && (
-                  <div className="my-3">
-                    <h2>Other Football</h2>
-                    <ListGroup>
-                      {liveEventsData.map(event =>
-                        !event.linkedEventTypeId ? (
-                          <ListGroup.Item key={event.eventId}>
-                            {event.name}
-                          </ListGroup.Item>
-                        ) : null
+                distinctLinkedEventTypes.map(eventType =>
+                  !eventType.linkedEventTypeId ? (
+                    <EventsList
+                      key={eventType.linkedEventTypeId}
+                      name={eventType.linkedEventTypeName}
+                      events={liveEventsData.filter(
+                        event =>
+                          event.linkedEventTypeId ===
+                          eventType.linkedEventTypeId
                       )}
-                    </ListGroup>
-                  </div>
+                      marketsData={marketsData}
+                      webSocket={webSocket}
+                    />
+                  ) : null
                 )}
             </Col>
           </Row>
