@@ -44,12 +44,12 @@ class App extends React.Component {
             <img src={SkyBetLogo} alt="Sky Bet" />
           </Navbar.Brand>
         </Navbar>
-        <uL>
+        <ul>
           {liveEventsData.length > 0 &&
             liveEventsData.map(event => (
-              <li key="event.eventId">{event.name}</li>
+              <li key={event.eventId}>{event.name}</li>
             ))}
-        </uL>
+        </ul>
       </div>
     );
   }
