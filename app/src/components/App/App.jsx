@@ -1,13 +1,6 @@
 import React from "react";
 import "./App.css";
-import {
-  Navbar,
-  ListGroup,
-  Container,
-  Row,
-  Col,
-  Button
-} from "react-bootstrap";
+import { Navbar, Container, Row, Col, Button } from "react-bootstrap";
 import EventsList from "../EventsList/EventsList";
 import SkyBetLogo from "../../images/skybet-logo.png";
 
@@ -164,22 +157,16 @@ class App extends React.Component {
                   ) : null
                 )}
 
-              {distinctLinkedEventTypes.length > 0 &&
-                distinctLinkedEventTypes.map(eventType =>
-                  !eventType.linkedEventTypeId ? (
-                    <EventsList
-                      key={eventType.linkedEventTypeId}
-                      name={eventType.linkedEventTypeName}
-                      events={liveEventsData.filter(
-                        event =>
-                          event.linkedEventTypeId ===
-                          eventType.linkedEventTypeId
-                      )}
-                      marketsData={marketsData}
-                      webSocket={webSocket}
-                    />
-                  ) : null
-                )}
+              {distinctLinkedEventTypes.length > 0 && (
+                <EventsList
+                  name="Other Football"
+                  events={liveEventsData.filter(
+                    event => !event.linkedEventTypeId
+                  )}
+                  marketsData={marketsData}
+                  webSocket={webSocket}
+                />
+              )}
             </Col>
           </Row>
         </Container>
