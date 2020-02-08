@@ -1,6 +1,13 @@
 import React from "react";
 import "./App.css";
-import { Navbar, ListGroup, Container, Row, Col } from "react-bootstrap";
+import {
+  Navbar,
+  ListGroup,
+  Container,
+  Row,
+  Col,
+  Button
+} from "react-bootstrap";
 import EventsList from "../EventsList/EventsList";
 import SkyBetLogo from "../../images/skybet-logo.png";
 
@@ -9,13 +16,23 @@ class App extends React.Component {
     super();
     this.w = new WebSocket("ws://localhost:8889");
     this.state = {
-      liveEventsData: {}
+      liveEventsData: {},
+      showPrimaryMarkets: false
     };
   }
 
   componentDidMount() {
+    const { showPrimaryMarkets } = this.state;
     this.listenForMessages();
-    this.w.onopen = () => this.getLiveEvents();
+    this.w.onopen = () => this.getLiveEvents(showPrimaryMarkets);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { showPrimaryMarkets } = this.state;
+
+    if (showPrimaryMarkets !== prevState.showPrimaryMarkets) {
+      this.getLiveEvents(showPrimaryMarkets);
+    }
   }
 
   getLiveEvents = (primaryMarkets = false) => {
@@ -36,7 +53,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { liveEventsData } = this.state;
+    const { liveEventsData, showPrimaryMarkets } = this.state;
     const linkedEventTypes =
       liveEventsData.length > 1
         ? liveEventsData.map(event => {
@@ -79,6 +96,17 @@ class App extends React.Component {
           <Row>
             <Col>
               <h1>Live Games</h1>
+
+              <Button
+                variant="primary"
+                onClick={() =>
+                  this.setState({ showPrimaryMarkets: !showPrimaryMarkets })
+                }
+              >
+                {showPrimaryMarkets
+                  ? "Hide Primary Markets"
+                  : "Show Primary Markets"}
+              </Button>
 
               {distinctLinkedEventTypes.length > 0 &&
                 distinctLinkedEventTypes.map(eventType =>
