@@ -4,11 +4,7 @@ import { ListGroup } from "react-bootstrap";
 
 const EventDisplay = props => {
   const { eventId, name } = props;
-  return (
-    <ListGroup.Item as="li" key={eventId}>
-      {name}
-    </ListGroup.Item>
-  );
+  return <ListGroup.Item key={eventId}>{name}</ListGroup.Item>;
 };
 
 EventDisplay.propTypes = {

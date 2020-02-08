@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { Navbar, ListGroup, Container, Row, Col } from "react-bootstrap";
-import EventDisplay from "../index";
+import EventsList from "../EventsList/EventsList";
 import SkyBetLogo from "../../images/skybet-logo.png";
 
 class App extends React.Component {
@@ -83,21 +83,15 @@ class App extends React.Component {
               {distinctLinkedEventTypes.length > 0 &&
                 distinctLinkedEventTypes.map(eventType =>
                   eventType.linkedEventTypeId ? (
-                    <div key={eventType.linkedEventTypeId} className="my-3">
-                      <h2>{eventType.linkedEventTypeName}</h2>
-                      <ListGroup as="ul">
-                        {liveEventsData.map(event =>
+                    <EventsList
+                      key={eventType.linkedEventTypeId}
+                      name={eventType.linkedEventTypeName}
+                      events={liveEventsData.filter(
+                        event =>
                           event.linkedEventTypeId ===
-                          eventType.linkedEventTypeId ? (
-                            <EventDisplay
-                              key={event.eventId}
-                              eventId={event.eventId}
-                              name={event.name}
-                            />
-                          ) : null
-                        )}
-                      </ListGroup>
-                    </div>
+                          eventType.linkedEventTypeId
+                      )}
+                    />
                   ) : null
                 )}
 
