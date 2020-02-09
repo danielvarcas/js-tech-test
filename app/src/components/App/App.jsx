@@ -184,48 +184,54 @@ class App extends React.Component {
         <Container className="my-3">
           <Row>
             <Col>
-              <h1>Live Games</h1>
+              <h1 className="text-center">Live Games</h1>
 
-              <Button
-                variant="primary"
-                onClick={() =>
-                  this.setState({ showPrimaryMarkets: !showPrimaryMarkets })
-                }
-              >
-                {showPrimaryMarkets
-                  ? "Hide Primary Markets"
-                  : "Show Primary Markets"}
-              </Button>
+              <div className="d-flex flex-column flex-md-row justify-content-md-end">
+                <Button
+                  className="my-1 my-md-0 mr-md-1"
+                  variant="primary"
+                  onClick={() =>
+                    this.setState({ showPrimaryMarkets: !showPrimaryMarkets })
+                  }
+                >
+                  {showPrimaryMarkets
+                    ? "Hide Primary Markets"
+                    : "Show Primary Markets"}
+                </Button>
 
-              <Button
-                variant="secondary"
-                onClick={() =>
-                  this.setState({
-                    displayPricesAsFractional: !displayPricesAsFractional
-                  })
-                }
-              >
-                {displayPricesAsFractional
-                  ? "Display Decimal"
-                  : "Display Fractional"}
-              </Button>
+                <Button
+                  className="my-1 my-md-0 ml-md-1"
+                  variant="secondary"
+                  onClick={() =>
+                    this.setState({
+                      displayPricesAsFractional: !displayPricesAsFractional
+                    })
+                  }
+                >
+                  {displayPricesAsFractional
+                    ? "Display Decimal"
+                    : "Display Fractional"}
+                </Button>
+              </div>
 
               {distinctLinkedEventTypes.length > 0 &&
                 distinctLinkedEventTypes.map(eventType =>
                   eventType.linkedEventTypeId ? (
-                    <EventsList
-                      key={eventType.linkedEventTypeId}
-                      name={eventType.linkedEventTypeName}
-                      events={liveEventsData.filter(
-                        event =>
-                          event.linkedEventTypeId ===
-                          eventType.linkedEventTypeId
-                      )}
-                      marketsData={marketsData}
-                      outcomesData={outcomesData}
-                      displayPricesAsFractional={displayPricesAsFractional}
-                      webSocket={webSocket}
-                    />
+                    <div className="my-3">
+                      <EventsList
+                        key={eventType.linkedEventTypeId}
+                        name={eventType.linkedEventTypeName}
+                        events={liveEventsData.filter(
+                          event =>
+                            event.linkedEventTypeId ===
+                            eventType.linkedEventTypeId
+                        )}
+                        marketsData={marketsData}
+                        outcomesData={outcomesData}
+                        displayPricesAsFractional={displayPricesAsFractional}
+                        webSocket={webSocket}
+                      />
+                    </div>
                   ) : null
                 )}
 
