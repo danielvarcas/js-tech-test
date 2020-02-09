@@ -4,7 +4,13 @@ import { ListGroup } from "react-bootstrap";
 import EventDisplay from "../EventDisplay/EventDisplay";
 
 const EventsList = props => {
-  const { name, events, marketsData, outcomesData } = props;
+  const {
+    name,
+    events,
+    marketsData,
+    outcomesData,
+    displayPricesAsFractional
+  } = props;
 
   return (
     <div>
@@ -18,6 +24,7 @@ const EventsList = props => {
             marketIds={event.markets}
             marketsData={marketsData}
             outcomesData={outcomesData}
+            displayPricesAsFractional={displayPricesAsFractional}
           />
         ))}
       </ListGroup>
@@ -28,11 +35,13 @@ EventsList.propTypes = {
   name: PropTypes.string.isRequired,
   events: PropTypes.arrayOf(PropTypes.object),
   marketsData: PropTypes.arrayOf(PropTypes.object),
-  outcomesData: PropTypes.arrayOf(PropTypes.object)
+  outcomesData: PropTypes.arrayOf(PropTypes.object),
+  displayPricesAsFractional: PropTypes.bool
 };
 EventsList.defaultProps = {
   events: [],
   marketsData: [],
-  outcomesData: []
+  outcomesData: [],
+  displayPricesAsFractional: false
 };
 export default EventsList;

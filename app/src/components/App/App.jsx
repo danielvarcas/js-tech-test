@@ -12,7 +12,8 @@ class App extends React.Component {
       liveEventsData: {},
       marketsData: [],
       outcomesData: [],
-      showPrimaryMarkets: false
+      showPrimaryMarkets: false,
+      displayPricesAsFractional: false
     };
   }
 
@@ -139,6 +140,7 @@ class App extends React.Component {
       marketsData,
       outcomesData,
       showPrimaryMarkets,
+      displayPricesAsFractional,
       webSocket
     } = this.state;
 
@@ -183,6 +185,7 @@ class App extends React.Component {
           <Row>
             <Col>
               <h1>Live Games</h1>
+
               <Button
                 variant="primary"
                 onClick={() =>
@@ -193,6 +196,20 @@ class App extends React.Component {
                   ? "Hide Primary Markets"
                   : "Show Primary Markets"}
               </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  this.setState({
+                    displayPricesAsFractional: !displayPricesAsFractional
+                  })
+                }
+              >
+                {displayPricesAsFractional
+                  ? "Display Decimal"
+                  : "Display Fractional"}
+              </Button>
+
               {distinctLinkedEventTypes.length > 0 &&
                 distinctLinkedEventTypes.map(eventType =>
                   eventType.linkedEventTypeId ? (
@@ -206,10 +223,12 @@ class App extends React.Component {
                       )}
                       marketsData={marketsData}
                       outcomesData={outcomesData}
+                      displayPricesAsFractional={displayPricesAsFractional}
                       webSocket={webSocket}
                     />
                   ) : null
                 )}
+
               {distinctLinkedEventTypes.length > 0 && (
                 <EventsList
                   name="Other Football"

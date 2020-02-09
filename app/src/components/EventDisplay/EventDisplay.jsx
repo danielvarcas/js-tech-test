@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 import { ListGroup } from "react-bootstrap";
 
 const EventDisplay = props => {
-  const { eventId, name, marketIds, marketsData, outcomesData } = props;
+  const {
+    eventId,
+    name,
+    marketIds,
+    marketsData,
+    outcomesData,
+    displayPricesAsFractional
+  } = props;
 
   // Refactor: Could filter at higher component level before passing as props
   const eventMarkets = marketsData.filter(marketData =>
@@ -27,8 +34,10 @@ const EventDisplay = props => {
                 {eventOutcomes.map(eventOutcome =>
                   eventOutcome.marketId === eventMarket.marketId ? (
                     <li key={eventOutcome.outcomeId}>
-                      {eventOutcome.name} - {eventOutcome.price.decimal} -{" "}
-                      {eventOutcome.price.num}/{eventOutcome.price.den}
+                      {eventOutcome.name} -{" "}
+                      {displayPricesAsFractional
+                        ? `${eventOutcome.price.num}/${eventOutcome.price.den}`
+                        : eventOutcome.price.decimal}
                     </li>
                   ) : null
                 )}
@@ -45,13 +54,13 @@ EventDisplay.propTypes = {
   name: PropTypes.string.isRequired,
   marketIds: PropTypes.arrayOf(PropTypes.number),
   marketsData: PropTypes.arrayOf(PropTypes.object),
-  outcomeIds: PropTypes.arrayOf(PropTypes.number),
-  outcomesData: PropTypes.arrayOf(PropTypes.object)
+  outcomesData: PropTypes.arrayOf(PropTypes.object),
+  displayPricesAsFractional: PropTypes.bool
 };
 EventDisplay.defaultProps = {
   marketIds: [],
   marketsData: [],
-  outcomeIds: [],
-  outcomesData: []
+  outcomesData: [],
+  displayPricesAsFractional: false
 };
 export default EventDisplay;
