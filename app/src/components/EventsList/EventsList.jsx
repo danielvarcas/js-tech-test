@@ -5,6 +5,7 @@ import EventDisplay from "../EventDisplay/EventDisplay";
 
 const EventsList = props => {
   const { name, events, marketsData, outcomesData } = props;
+
   return (
     <div>
       <h2>{name}</h2>
@@ -16,7 +17,6 @@ const EventsList = props => {
             name={event.name}
             marketIds={event.markets}
             marketsData={marketsData}
-            outcomeIds={event.outcomes}
             outcomesData={outcomesData}
           />
         ))}

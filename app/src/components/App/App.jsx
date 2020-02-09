@@ -81,6 +81,7 @@ class App extends React.Component {
       return accumulator;
     }, []);
     const distinctOutcomeIds = new Set([...outcomeIds]);
+    // Refactor: Could set distinctOutcomeIds in state and pass as props to EventsList
     distinctOutcomeIds.forEach(outcomeId => this.getOutcome(outcomeId));
   }
 
