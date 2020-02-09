@@ -10,7 +10,8 @@ const EventDisplay = props => {
     outcomesData,
     displayPricesAsFractional,
     competitors,
-    scores
+    scores,
+    showPrimaryMarkets
   } = props;
 
   // Refactor: Could filter at higher component level before passing as props
@@ -54,28 +55,29 @@ const EventDisplay = props => {
 
         {marketIds.length > 0 && (
           <>
-            {eventMarkets.map(eventMarket => (
-              <React.Fragment key={eventMarket.marketId}>
-                <ListGroup.Item className="bg-primary text-light">
-                  <h6>{eventMarket.name}</h6>
-                </ListGroup.Item>
+            {showPrimaryMarkets &&
+              eventMarkets.map(eventMarket => (
+                <React.Fragment key={eventMarket.marketId}>
+                  <ListGroup.Item className="bg-primary text-light">
+                    <h6>{eventMarket.name}</h6>
+                  </ListGroup.Item>
 
-                {eventOutcomes.map(eventOutcome =>
-                  eventOutcome.marketId === eventMarket.marketId ? (
-                    <ListGroup.Item key={eventOutcome.outcomeId}>
-                      <Row>
-                        <Col>{eventOutcome.name}</Col>
-                        <Col className="text-right">
-                          {displayPricesAsFractional
-                            ? `${eventOutcome.price.num}/${eventOutcome.price.den}`
-                            : eventOutcome.price.decimal}
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
-                  ) : null
-                )}
-              </React.Fragment>
-            ))}
+                  {eventOutcomes.map(eventOutcome =>
+                    eventOutcome.marketId === eventMarket.marketId ? (
+                      <ListGroup.Item key={eventOutcome.outcomeId}>
+                        <Row>
+                          <Col>{eventOutcome.name}</Col>
+                          <Col className="text-right">
+                            {displayPricesAsFractional
+                              ? `${eventOutcome.price.num}/${eventOutcome.price.den}`
+                              : eventOutcome.price.decimal}
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                    ) : null
+                  )}
+                </React.Fragment>
+              ))}
           </>
         )}
       </ListGroup>

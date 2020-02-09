@@ -18,35 +18,31 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const { webSocket, showPrimaryMarkets } = this.state;
+    const { webSocket } = this.state;
     webSocket.onopen = () => {
       // eslint-disable-next-line no-console
       console.log("Connected WebSocket in App component");
       this.listenForMessages();
-      this.getLiveEvents(showPrimaryMarkets);
+      this.getLiveEvents();
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { showPrimaryMarkets, liveEventsData, marketsData } = this.state;
+    const { liveEventsData, marketsData } = this.state;
 
-    if (showPrimaryMarkets !== prevState.showPrimaryMarkets) {
-      this.getLiveEvents(showPrimaryMarkets);
+    if (liveEventsData !== prevState.liveEventsData) {
+      this.getMarkets();
     }
-
-    if (showPrimaryMarkets) {
-      if (liveEventsData !== prevState.liveEventsData) {
-        this.getMarkets();
-      }
-      if (marketsData !== prevState.marketsData) {
-        this.getOutcomes();
-      }
+    if (marketsData !== prevState.marketsData) {
+      this.getOutcomes();
     }
   }
 
-  getLiveEvents(primaryMarkets = false) {
+  getLiveEvents() {
     const { webSocket } = this.state;
-    webSocket.send(JSON.stringify({ type: "getLiveEvents", primaryMarkets }));
+    webSocket.send(
+      JSON.stringify({ type: "getLiveEvents", primaryMarkets: true })
+    );
   }
 
   getMarkets() {
@@ -229,6 +225,7 @@ class App extends React.Component {
                         marketsData={marketsData}
                         outcomesData={outcomesData}
                         displayPricesAsFractional={displayPricesAsFractional}
+                        showPrimaryMarkets={showPrimaryMarkets}
                         webSocket={webSocket}
                       />
                     </div>

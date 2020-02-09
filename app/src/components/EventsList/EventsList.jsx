@@ -8,7 +8,8 @@ const EventsList = props => {
     events,
     marketsData,
     outcomesData,
-    displayPricesAsFractional
+    displayPricesAsFractional,
+    showPrimaryMarkets
   } = props;
 
   return (
@@ -24,6 +25,7 @@ const EventsList = props => {
             outcomesData={outcomesData}
             displayPricesAsFractional={displayPricesAsFractional}
             competitors={event.competitors}
+            showPrimaryMarkets={showPrimaryMarkets}
             scores={event.scores}
           />
         </div>
