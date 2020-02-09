@@ -240,6 +240,9 @@ class App extends React.Component {
                   )}
                   marketsData={marketsData}
                   outcomesData={outcomesData}
+                  displayPricesAsFractional={displayPricesAsFractional}
+                  showPrimaryMarkets={showPrimaryMarkets}
+                  webSocket={webSocket}
                 />
               )}
             </Col>

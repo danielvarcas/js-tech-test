@@ -19,7 +19,6 @@ const EventsList = props => {
         <div key={event.eventId} className="my-3">
           <EventDisplay
             eventId={event.eventId}
-            name={event.name}
             marketIds={event.markets}
             marketsData={marketsData}
             outcomesData={outcomesData}
@@ -38,12 +37,14 @@ EventsList.propTypes = {
   events: PropTypes.arrayOf(PropTypes.object),
   marketsData: PropTypes.arrayOf(PropTypes.object),
   outcomesData: PropTypes.arrayOf(PropTypes.object),
-  displayPricesAsFractional: PropTypes.bool
+  displayPricesAsFractional: PropTypes.bool,
+  showPrimaryMarkets: PropTypes.bool
 };
 EventsList.defaultProps = {
   events: [],
   marketsData: [],
   outcomesData: [],
-  displayPricesAsFractional: false
+  displayPricesAsFractional: false,
+  showPrimaryMarkets: false
 };
 export default EventsList;

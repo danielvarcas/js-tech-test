@@ -86,7 +86,6 @@ const EventDisplay = props => {
 };
 EventDisplay.propTypes = {
   eventId: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
   marketIds: PropTypes.arrayOf(PropTypes.number),
   marketsData: PropTypes.arrayOf(PropTypes.object),
   outcomesData: PropTypes.arrayOf(PropTypes.object),
@@ -95,12 +94,14 @@ EventDisplay.propTypes = {
     PropTypes.shape({ name: PropTypes.string, position: PropTypes.string })
   ).isRequired,
   scores: PropTypes.shape({ home: PropTypes.number, away: PropTypes.number })
-    .isRequired
+    .isRequired,
+  showPrimaryMarkets: PropTypes.bool
 };
 EventDisplay.defaultProps = {
   marketIds: [],
   marketsData: [],
   outcomesData: [],
-  displayPricesAsFractional: false
+  displayPricesAsFractional: false,
+  showPrimaryMarkets: false
 };
 export default EventDisplay;
