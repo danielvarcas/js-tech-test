@@ -136,8 +136,7 @@ class App extends React.Component {
       marketsData,
       outcomesData,
       showPrimaryMarkets,
-      displayPricesAsFractional,
-      webSocket
+      displayPricesAsFractional
     } = this.state;
 
     const linkedEventTypes =
@@ -213,9 +212,8 @@ class App extends React.Component {
               {distinctLinkedEventTypes.length > 0 &&
                 distinctLinkedEventTypes.map(eventType =>
                   eventType.linkedEventTypeId ? (
-                    <div className="my-3">
+                    <div className="my-3" key={eventType.linkedEventTypeId}>
                       <EventsList
-                        key={eventType.linkedEventTypeId}
                         name={eventType.linkedEventTypeName}
                         events={liveEventsData.filter(
                           event =>
@@ -226,7 +224,6 @@ class App extends React.Component {
                         outcomesData={outcomesData}
                         displayPricesAsFractional={displayPricesAsFractional}
                         showPrimaryMarkets={showPrimaryMarkets}
-                        webSocket={webSocket}
                       />
                     </div>
                   ) : null
@@ -242,7 +239,6 @@ class App extends React.Component {
                   outcomesData={outcomesData}
                   displayPricesAsFractional={displayPricesAsFractional}
                   showPrimaryMarkets={showPrimaryMarkets}
-                  webSocket={webSocket}
                 />
               )}
             </Col>
