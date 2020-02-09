@@ -11,13 +11,13 @@ class App extends React.Component {
       webSocket: new WebSocket("ws://localhost:8889"),
       liveEventsData: {},
       marketsData: [],
+      outcomesData: [],
       showPrimaryMarkets: false
     };
   }
 
   componentDidMount() {
     const { webSocket, showPrimaryMarkets } = this.state;
-
     webSocket.onopen = () => {
       // eslint-disable-next-line no-console
       console.log("Connected WebSocket in App component");
@@ -27,17 +27,41 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { showPrimaryMarkets } = this.state;
+    const { showPrimaryMarkets, liveEventsData, marketsData } = this.state;
 
     if (showPrimaryMarkets !== prevState.showPrimaryMarkets) {
       this.getLiveEvents(showPrimaryMarkets);
     }
+
+    if (showPrimaryMarkets) {
+      if (liveEventsData !== prevState.liveEventsData) {
+        this.getMarkets();
+      }
+      if (marketsData !== prevState.marketsData) {
+        this.getOutcomes();
+      }
+    }
   }
 
-  getLiveEvents = (primaryMarkets = false) => {
+  getLiveEvents(primaryMarkets = false) {
     const { webSocket } = this.state;
     webSocket.send(JSON.stringify({ type: "getLiveEvents", primaryMarkets }));
-  };
+  }
+
+  getMarkets() {
+    const { liveEventsData } = this.state;
+
+    if (liveEventsData.length < 1) return;
+
+    const marketIds = liveEventsData.reduce((accumulator, currentValue) => {
+      accumulator.push(...currentValue.markets);
+      return accumulator;
+    }, []);
+
+    if (marketIds.length < 1) return;
+
+    marketIds.forEach(marketId => this.getMarket(marketId));
+  }
 
   getMarket(marketId = 0) {
     const { webSocket } = this.state;
@@ -49,22 +73,47 @@ class App extends React.Component {
     );
   }
 
+  getOutcomes() {
+    const { marketsData } = this.state;
+    const outcomeIds = marketsData.reduce((accumulator, currentValue) => {
+      const ids = currentValue.outcomes;
+      accumulator.push(...ids);
+      return accumulator;
+    }, []);
+    const distinctOutcomeIds = new Set([...outcomeIds]);
+    distinctOutcomeIds.forEach(outcomeId => this.getOutcome(outcomeId));
+  }
+
+  getOutcome(outcomeId) {
+    const { webSocket } = this.state;
+    webSocket.send(JSON.stringify({ type: "getOutcome", id: outcomeId }));
+  }
+
   updateMarketsData(newMarketData) {
     const { marketsData } = this.state;
-
     const newMarketDataIsDuplicate = marketsData.some(
       marketData => marketData.marketId === newMarketData.marketId
     );
-
     if (!newMarketDataIsDuplicate) {
       const combinedMarketData = [...marketsData, newMarketData];
       this.setState({ marketsData: combinedMarketData });
     }
   }
 
+  // Refactor: Make updateMarketsData and updateOutcomesData one reusable function
+  updateOutcomesData(newOutcomeData) {
+    const { outcomesData } = this.state;
+    const newOutcomeDataIsDuplicate = outcomesData.some(
+      outcomeData => outcomeData.outcomeId === newOutcomeData.outcomeId
+    );
+    if (!newOutcomeDataIsDuplicate) {
+      const combinedOutcomesData = [...outcomesData, newOutcomeData];
+      this.setState({ outcomesData: combinedOutcomesData });
+    }
+  }
+
   listenForMessages() {
     const { webSocket } = this.state;
-
     webSocket.addEventListener("message", m => {
       const message = JSON.parse(m.data);
       switch (message.type) {
@@ -73,6 +122,9 @@ class App extends React.Component {
           break;
         case "MARKET_DATA":
           this.updateMarketsData(message.data);
+          break;
+        case "OUTCOME_DATA":
+          this.updateOutcomesData(message.data);
           break;
         default:
           break;
@@ -84,6 +136,7 @@ class App extends React.Component {
     const {
       liveEventsData,
       marketsData,
+      outcomesData,
       showPrimaryMarkets,
       webSocket
     } = this.state;
@@ -104,7 +157,6 @@ class App extends React.Component {
           accumulator.push(currentValue);
           return accumulator;
         }
-
         if (
           !accumulator.some(
             linkedEventType =>
@@ -152,11 +204,11 @@ class App extends React.Component {
                           eventType.linkedEventTypeId
                       )}
                       marketsData={marketsData}
+                      outcomesData={outcomesData}
                       webSocket={webSocket}
                     />
                   ) : null
                 )}
-
               {distinctLinkedEventTypes.length > 0 && (
                 <EventsList
                   name="Other Football"
@@ -164,7 +216,7 @@ class App extends React.Component {
                     event => !event.linkedEventTypeId
                   )}
                   marketsData={marketsData}
-                  webSocket={webSocket}
+                  outcomesData={outcomesData}
                 />
               )}
             </Col>
@@ -174,5 +226,4 @@ class App extends React.Component {
     );
   }
 }
-
 export default App;

@@ -4,7 +4,7 @@ import { ListGroup } from "react-bootstrap";
 import EventDisplay from "../EventDisplay/EventDisplay";
 
 const EventsList = props => {
-  const { name, events, webSocket, marketsData } = props;
+  const { name, events, marketsData, outcomesData } = props;
   return (
     <div>
       <h2>{name}</h2>
@@ -14,27 +14,25 @@ const EventsList = props => {
             key={event.eventId}
             eventId={event.eventId}
             name={event.name}
-            webSocket={webSocket}
             marketIds={event.markets}
             marketsData={marketsData}
+            outcomeIds={event.outcomes}
+            outcomesData={outcomesData}
           />
         ))}
       </ListGroup>
     </div>
   );
 };
-
 EventsList.propTypes = {
   name: PropTypes.string.isRequired,
   events: PropTypes.arrayOf(PropTypes.object),
   marketsData: PropTypes.arrayOf(PropTypes.object),
-  // eslint-disable-next-line react/forbid-prop-types
-  webSocket: PropTypes.object.isRequired
+  outcomesData: PropTypes.arrayOf(PropTypes.object)
 };
-
 EventsList.defaultProps = {
   events: [],
-  marketsData: []
+  marketsData: [],
+  outcomesData: []
 };
-
 export default EventsList;

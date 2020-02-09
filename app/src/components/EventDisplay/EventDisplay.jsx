@@ -3,17 +3,14 @@ import PropTypes from "prop-types";
 import { ListGroup } from "react-bootstrap";
 
 const EventDisplay = props => {
-  const { eventId, name, marketIds, webSocket, marketsData } = props;
-
-  function getMarket(marketId) {
-    webSocket.send(JSON.stringify({ type: "getMarket", id: marketId }));
-  }
-
-  marketIds.forEach(marketId => {
-    if (!marketsData.some(marketData => marketData.marketId === marketId)) {
-      getMarket(marketId);
-    }
-  });
+  const {
+    eventId,
+    name,
+    marketIds,
+    marketsData,
+    outcomeIds,
+    outcomesData
+  } = props;
 
   const eventMarkets = marketsData.filter(marketData =>
     marketIds.find(marketId => marketId === marketData.marketId)
@@ -35,19 +32,18 @@ const EventDisplay = props => {
     </ListGroup.Item>
   );
 };
-
 EventDisplay.propTypes = {
   eventId: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   marketIds: PropTypes.arrayOf(PropTypes.number),
   marketsData: PropTypes.arrayOf(PropTypes.object),
-  // eslint-disable-next-line react/forbid-prop-types
-  webSocket: PropTypes.object.isRequired
+  outcomeIds: PropTypes.arrayOf(PropTypes.number),
+  outcomesData: PropTypes.arrayOf(PropTypes.object)
 };
-
 EventDisplay.defaultProps = {
   marketIds: [],
-  marketsData: []
+  marketsData: [],
+  outcomeIds: [],
+  outcomesData: []
 };
-
 export default EventDisplay;
